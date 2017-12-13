@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> Crash viz on crashes </title>
+    	<script type="text/javascript" src="d3/d3.min.js"></script>
+    	<style>
+	    	.axis .domain {
+		    	display: none;
+	    	}
+	   	</style>
+	   	<svg width="960" height="500"></svg>
+  	</head>
+  	<body>
+    	<p>Hello!</p>  
+    	
+    	<script>
+	    	var svg = d3.select("svg"),
+		    margin = {top: 20, right: 20, bottom: 30, left: 40},
+		    width = +svg.attr("width") - margin.left - margin.right,
+		    height = +svg.attr("height") - margin.top - margin.bottom,
+		    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		
+			var x = d3.scaleBand()
+			    .rangeRound([0, width])
+			    .paddingInner(0.05)
+			    .align(0.1);
+			
+			var y = d3.scaleLinear()
+			    .rangeRound([height, 0]);
+			
+			var z = d3.scaleOrdinal()
+			    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+			
+			var injuryData = '';    
+	    	
+	    	d3.csv("data/data.csv", function (csv_data) {
+		    	csv_data.forEach(function(d) {
+			    	d["Number of Injuries"] = +d["Number of Injuries"];
+			    	d["Number of Serious Injuries"] = +d["Number of Serious Injuries"];
+			    	d["Number of Fatalities"] = +d["Number of Fatalities"];
+				});
+		    	
+			    var injuries = d3.nest()
+			    	.key(function(d) { return d["Case Year"]; })
+			    	.rollup(function(d) {
+				    	return d3.sum(d, function(g) { return g["Number of Injuries"]; });
+			    	}).entries(csv_data)
+			    	
+			    var serious = d3.nest()
+			    	.key(function(d) { return d["Case Year"]; })
+			    	.rollup(function(d) {
+				    	return d3.sum(d, function(g) { return g["Number of Serious Injuries"]; });
+			    	}).entries(csv_data)
+	
+			    var fatalities = d3.nest()
+			    	.key(function(d) { return d["Case Year"]; })
+			    	.rollup(function(d) {
+				    	return d3.sum(d, function(g) { return g["Number of Fatalities"]; });
+			    	}).entries(csv_data) 
+
+		    console.log(JSON.stringify(injuries));
+		    console.log(JSON.stringify(serious));
+		    console.log(JSON.stringify(fatalities));
+		    	
+		    });
+	    	
+	    </script>
+	    	
+   	</body>
+</html>
