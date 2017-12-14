@@ -33,11 +33,9 @@
     	
     	<script>
 
-    		var w = 1000;
+    		var w = 900;
     		var h = 500;
-    		// var dataArray = [20, 40, 50, 60]; 
-
-
+    	
     		var canvas = d3.select("#bubblegraph")
     			.append("svg")
 			      .attr("width", w)
@@ -47,21 +45,13 @@
 			var radiusScale = d3.scaleSqrt().domain([1, 988]).range([10, 50])
 
 			var simulation = d3.forceSimulation()
-				.force("x", d3.forceX(w/2).strength(0.02))
-				.force("y",d3.forceY(h/2).strength(0.01))
-				.force("collide", d3.forceCollide(5))
+				.force("x", d3.forceX(600).strength(0.04))
+				.force("y",d3.forceY(400).strength(0.01))
+				.force("collide", d3.forceCollide(30))
 			
 			function filterCriteria(d){
 				return d.county === "MONROE";
 			}
-
-			// d3.queue()
-			// 	.defer(d3.csv, "data/data.csv")
-			// 	.await(createNodes)
-
-			// d3.csv("data/data.csv", function(data){
-			// 	createNodes(err, data);
-			// })
 
 			function createNodes(datapoints){
 				
@@ -69,7 +59,7 @@
 					.data(datapoints)
 					.enter()
 						.append("circle")
-						.attr("r", 5)
+						.attr("r", 20)
 						.attr("fill", "lightblue")
 						.on('click', function(d){
 							console.log(d)
@@ -90,7 +80,10 @@
 				}
 			}
 
-
+			// Define the div for the tooltip
+			var div = d3.select("body").append("div")	
+			    .attr("class", "tooltip")				
+			    .style("opacity", 0);
 			
 
 
@@ -123,6 +116,7 @@
 			    	d["Number of Injuries"] = +d["Number of Injuries"];
 			    	d["Number of Serious Injuries"] = +d["Number of Serious Injuries"];
 			    	d["Number of Fatalities"] = +d["Number of Fatalities"];
+			    	d.county = d.county;
 				});
 
 				var county = d3.nest()
