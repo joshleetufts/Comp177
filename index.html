@@ -48,7 +48,7 @@
 				.force("x", d3.forceX(600).strength(0.04))
 				.force("y",d3.forceY(400).strength(0.01))
 				.force("collide", d3.forceCollide(30))
-			
+
 			function filterCriteria(d){
 				return d.county === "MONROE";
 			}
@@ -125,7 +125,54 @@
 						return d3.sum(d, function(g) { return 1})
 					}).entries(csv_data)
 
+				var weather = d3.nest()
+					.key(function(d) {return d["Weather"];})
+					.key(function(d) {return d["County"];})
+					.rollup(function(d){
+						return d3.sum(d, function(g) {return 1})
+					}).entries(csv_data)
+
+				console.log(weather);
+
+				var relational = d3.nest()
+					.key(function(d) {return d["Vehicle Type Veh1"];})
+					.key(function(d) {return d["Apparent Factor Veh1"];})
+					.rollup(function(d){
+						return d3.sum(d, function(g) {return 1})
+					}).entries(csv_data)
+
+				console.log(relational);
 				createNodes(county);
+
+				var age = d3.nest()
+					.key(function(d) {return d["County"]})
+					.key(function(d){
+						var ageGroup = null;
+						if (d["Driver Age Veh1"] <= 20){
+							ageGroup = '15-20';
+						} else if (d["Driver Age Veh1"] > 20 && d["Driver Age Veh1"] <= 30 ) {
+							ageGroup = '21-30';
+						} else if (d["Driver Age Veh1"] > 30 && d["Driver Age Veh1"] <= 40 ) {
+							ageGroup = '31-40';
+						} else if (d["Driver Age Veh1"] > 40 && d["Driver Age Veh1"] <= 50 ) {
+							ageGroup = '41-50';
+						} else if (d["Driver Age Veh1"] > 50 && d["Driver Age Veh1"] <= 60 ) {
+							ageGroup = '51-60';
+						} else if (d["Driver Age Veh1"] > 60 && d["Driver Age Veh1"] <= 70 ) {
+							ageGroup = '61-70';
+						} else if (d["Driver Age Veh1"] > 70 && d["Driver Age Veh1"] <= 80 ) {
+							ageGroup = '71-80';
+						} else if (d["Driver Age Veh1"] > 80 && d["Driver Age Veh1"] <= 90 ) {
+							ageGroup = '81-90';
+						}
+					return ageGroup;
+
+				}).entries(csv_data);
+
+				console.log(age);
+				
+
+
 		    	
 			    var injuries = d3.nest()
 			    	.key(function(d) { return d["Case Year"]; })
