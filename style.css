@@ -10,11 +10,12 @@ body {
 
 .intro {
 	width: 600px;
-	margin: 50px auto;
+	margin: 100px auto;
 	text-align: center;
 }
 
 .intro h1 {
+	margin: auto;
 	width: 400px;
 }
 

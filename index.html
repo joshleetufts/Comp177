@@ -33,47 +33,90 @@
     	
     	<script>
 
-    		const w = 700;
-    		const h = 500;
-    		var dataArray = [20, 40, 50, 60]; 
+    		var w = 1000;
+    		var h = 500;
+    		// var dataArray = [20, 40, 50, 60]; 
 
 
-    		var canvas = d3.select("#bubblegraph").append("svg")
+    		var canvas = d3.select("#bubblegraph")
+    			.append("svg")
 			      .attr("width", w)
-			      .attr("height", h);
+			      .attr("height", h)
+			      .append("g")		    
+
+			var radiusScale = d3.scaleSqrt().domain([1, 988]).range([10, 50])
+
+			var simulation = d3.forceSimulation()
+				.force("x", d3.forceX(w/2).strength(0.02))
+				.force("y",d3.forceY(h/2).strength(0.01))
+				.force("collide", d3.forceCollide(5))
+			
+			function filterCriteria(d){
+				return d.county === "MONROE";
+			}
+
+			// d3.queue()
+			// 	.defer(d3.csv, "data/data.csv")
+			// 	.await(createNodes)
+
+			// d3.csv("data/data.csv", function(data){
+			// 	createNodes(err, data);
+			// })
+
+			function createNodes(datapoints){
+				
+				var circles = canvas.selectAll()
+					.data(datapoints)
+					.enter()
+						.append("circle")
+						.attr("r", 5)
+						.attr("fill", "lightblue")
+						.on('click', function(d){
+							console.log(d)
+						})
+						
+
+				simulation.nodes(datapoints)
+					.on('tick', ticked)
+
+				function ticked() {
+					circles
+						.attr("cx", function(d){
+							return d.x
+						})
+						.attr("cy", function(d){
+							return d.y
+						})
+				}
+			}
 
 
-			var bubbles = canvas.selectAll("circle")
-				.data(dataArray)
-				.enter()
-					.append("circle")
-					.attr("cx", function(d, i){return 50 + (i * 50)})
-					.attr("cy", 150)
-					.attr("r", 25);
+			
 
 
 
 
 
 
-	    	var svg = d3.select("svg"),
-		    margin = {top: 20, right: 20, bottom: 30, left: 40},
-		    width = +svg.attr("width") - margin.left - margin.right,
-		    height = +svg.attr("height") - margin.top - margin.bottom,
-		    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	  //   	var svg = d3.select("svg"),
+		 //    margin = {top: 20, right: 20, bottom: 30, left: 40},
+		 //    width = +svg.attr("width") - margin.left - margin.right,
+		 //    height = +svg.attr("height") - margin.top - margin.bottom,
+		 //    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 		
-			var x = d3.scaleBand()
-			    .rangeRound([0, width])
-			    .paddingInner(0.05)
-			    .align(0.1);
+			// var x = d3.scaleBand()
+			//     .rangeRound([0, width])
+			//     .paddingInner(0.05)
+			//     .align(0.1);
 			
-			var y = d3.scaleLinear()
-			    .rangeRound([height, 0]);
+			// var y = d3.scaleLinear()
+			//     .rangeRound([height, 0]);
 			
-			var z = d3.scaleOrdinal()
-			    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+			// var z = d3.scaleOrdinal()
+			//     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 			
-			var injuryData = '';    
+			// var injuryData = '';    
 	    	
 	    	d3.csv("data/data.csv", function (csv_data) {
 		    	csv_data.forEach(function(d) {
@@ -81,6 +124,14 @@
 			    	d["Number of Serious Injuries"] = +d["Number of Serious Injuries"];
 			    	d["Number of Fatalities"] = +d["Number of Fatalities"];
 				});
+
+				var county = d3.nest()
+					.key(function(d) {return d["County"];})
+					.rollup(function(d) {
+						return d3.sum(d, function(g) { return 1})
+					}).entries(csv_data)
+
+				createNodes(county);
 		    	
 			    var injuries = d3.nest()
 			    	.key(function(d) { return d["Case Year"]; })
@@ -103,8 +154,10 @@
 		    console.log(JSON.stringify(injuries));
 		    console.log(JSON.stringify(serious));
 		    console.log(JSON.stringify(fatalities));
+		    console.log(county);
+		});
 		    	
-		    });
+		 //    });
 	    	
 	    </script>
 	    	
