@@ -14,14 +14,18 @@
 	    <link href="d3-tip.css" rel="stylesheet" type="text/css">
   	</head>
   	<body>
+
+
+
     	<div class = "intro">
 		      <h1>Could data visualizations make you a better driver?</h1>
 		      <p>From 2006-2015 there were a reported 70,000 car accidents among 9 counties in upstate New York. And while drivers should stay vigilant regardless of where they are, we set to find out whether specific counties/conditions are prone to certain kinds of accidents.</p>
 
  		 </div>
 
-    	<div id = "bubblegraph" class = "graph"">
-    	</div>
+ 		 <svg width='960' height = '700'></svg>
+
+    	
 
     	<div class = "intro">
 		      <h1>Could data visualizations make you a better driver?</h1>
@@ -33,6 +37,9 @@
     	
 
     	<div id = "bargraph" class = "graph">
+    	</div>
+
+    	<div id = "bubbletree" class = "graph"">
     	</div>
     	
     	<script>
@@ -270,26 +277,26 @@
 				      .text(function(d) { return d.id + "\n" + format(d.value); });
 				});
 
-				var legend = g.append("g")
-				      .attr("font-family", "sans-serif")
-				      .attr("font-size", 10)
-				      .attr("text-anchor", "end")
-				    .selectAll("g")
-				    .data(pack(root).leaves())
-				    .enter().append("g")
-				      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+				// var legend = g.append("g")
+				//       .attr("font-family", "sans-serif")
+				//       .attr("font-size", 10)
+				//       .attr("text-anchor", "end")
+				//     .selectAll("g")
+				//     .data(pack(root).leaves())
+				//     .enter().append("g")
+				//       .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 				
-				  legend.append("rect")
-				      .attr("x", width - 19)
-				      .attr("width", 19)
-				      .attr("height", 19)
-				      .attr("fill", z);
+				//   legend.append("rect")
+				//       .attr("x", width - 19)
+				//       .attr("width", 19)
+				//       .attr("height", 19)
+				//       .attr("fill", z);
 				
-				  legend.append("text")
-				      .attr("x", width - 24)
-				      .attr("y", 9.5)
-				      .attr("dy", "0.32em")
-				      .text(function(d) { return d; });
+				//   legend.append("text")
+				//       .attr("x", width - 24)
+				//       .attr("y", 9.5)
+				//       .attr("dy", "0.32em")
+				//       .text(function(d) { return d; });
 			}
 
 			
@@ -482,10 +489,11 @@
 			}
 			
 			function createBubbleGraph() {
-				var svg = d3.select("svg"),
+				
+				var bubbletree = d3.select("svg"),
 				margin = 40;
-			    diameter = +svg.attr("width"),
-			    g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+			    diameter = +bubbletree.attr("width",),
+			    g = bubbletree.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
 			
 				var color = d3.scaleLinear()
 				    .domain([-1, 5])
@@ -524,7 +532,7 @@
 				
 				  var node = g.selectAll("circle,text");
 				
-				  svg
+				  bubbletree
 				      .style("background", color(-1))
 				      .on("click", function() { zoom(root); });
 				
