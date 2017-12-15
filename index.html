@@ -3,6 +3,8 @@
 	<head>
 		<title> Crash viz on crashes </title>
     	<script type="text/javascript" src="d3/d3.min.js"></script>
+    	<script src="https://d3js.org/d3-selection-multi.v0.4.min.js"></script>
+
     	<style>
 	    	.axis .domain {
 		    	display: none;
@@ -33,14 +35,24 @@
     	
     	<script>
 
-    		var w = 900;
-    		var h = 500;
+    		var w = 1100;
+    		var h = 700;
     	
     		var canvas = d3.select("#bubblegraph")
     			.append("svg")
 			      .attr("width", w)
 			      .attr("height", h)
-			      .append("g")		    
+			      .append("g")	
+
+
+			
+
+			var relationgraph = d3.select("#relationgraph")
+    			.append("svg")
+			      .attr("width", w)
+			      .attr("height", h)
+			      .append("g")
+		    
 
 			var radiusScale = d3.scaleSqrt().domain([1, 988]).range([10, 50])
 
@@ -54,7 +66,6 @@
 			}
 
 			function createNodes(datapoints){
-				
 				var circles = canvas.selectAll()
 					.data(datapoints)
 					.enter()
@@ -80,11 +91,144 @@
 				}
 			}
 
+			
+
 			// Define the div for the tooltip
-			var div = d3.select("body").append("div")	
+			var div = d3.select("body")
+				.append("div")	
 			    .attr("class", "tooltip")				
 			    .style("opacity", 0);
 			
+			
+			function createNodeNetwork(data1, data2){
+				// console.log(d3.max(age));
+				// var simulation2 = d3.forceSimulation()
+				// 	.force("collide", d3.forceCollide(30))
+
+				// simulation2.nodes(age)
+				// 	.on('tick', function(){
+				// 		circles
+				// 			.attr("cx", function (d){
+				// 				return d.x
+				// 			})
+				// 			.attr("cy", function(d){
+				// 				return d.y
+				// 			})
+				// 	})
+
+
+				// var obj = agev1.find(function(obj, query){ return obj.key === "21-30"})
+				// console.log(obj);
+				// console.log(agev2);
+				// console.log(data1);
+
+				console.log(data1.get("51-60"))
+
+				var ageScale = d3.scaleSqrt().domain([1, 5773]).range([5, 50])
+				var accidentCauseScale = d3.scaleSqrt().domain([1, 3700]).range([5, 30])
+
+				var topcircles = relationgraph.selectAll()
+					.data(data1.entries())
+					.enter().append("g")
+
+					topcircles.append("circle")
+						.attr("r", function(d) {return ageScale(d.value)})
+						.attr("cy", 200)
+						.attr("cx", 0)
+						.attr("fill", "#E17366")
+						.on('click', function(d){
+							console.log(d)
+						})
+						.on("mouseover", function(d, i){
+
+							var circle = d3.select(this);
+							circle.transition(200)
+									.attr("fill", "#EA9D93")
+
+							tooltip.style("display", null);
+						})
+						.on("mouseout", function(d, i){
+							var circle = d3.select(this);
+							circle.transition(200)
+									.attr("fill", "#E17366")
+									.attr("stroke", "none")
+							
+							tooltip.style("display", "none")
+
+							d3.select("#t" + d.key).remove()
+						})
+						.on("mousemove", function(d){
+							var xPos = d3.mouse(this[0] - 15)
+							var yPos = d3.mouse(this)[1] - 55;
+							
+							tooltip.attr("transform", "translate(" + xPos + "," + yPos + ")");
+							tooltip.select("text").text(d.key + " : " + d.value);
+						})
+						.transition()
+							.duration(2000)
+							.attr("cx", function(d, i) {return 200 + i * 100})
+					
+
+						var tooltip = relationgraph.append("g")
+							.attr("class", "tooltip")
+							.style("display", "none");
+
+						tooltip.append("text")
+							.attr("x", 15)
+							.attr("dy", "1.2em")
+							.style("font-size", "1.25em")
+							.attr("font-weight", "bold");
+
+					topcircles.append("text")
+							.attrs({
+    							y: function() { return 205 }
+							})
+							.attr("x", function(d, i){ return 183 + i * 100})
+							.style("font-size", "12px")
+							.style("fill", "white")
+							.text(function(d){
+								return d.key;
+							})
+		
+				var bottomcircles = relationgraph.selectAll()
+					.data(data2.filter(function(d) {return d.key != "null" && d.value > 500;}))
+					.enter().append("g")
+
+					bottomcircles
+						.append("circle")
+						.attr("r", function(d) {return accidentCauseScale(d.value)})
+						.attr("cy", 400)
+						.attr("cx", function(d, i) {return 150 + i * 80})
+						.attr("fill", "#B45177")
+						.on('click', function(d){
+							console.log(d)
+						})
+						.on("mouseover", function(d, i){
+							console.log(d.value);
+							var circle = d3.select(this);
+							circle.transition(200)
+									.attr("fill", "#CA859F")
+						})
+						.on("mouseout", function(d, i){
+							var circle = d3.select(this);
+							circle.transition(200)
+									.attr("fill", "#B45177")
+									.attr("stroke", "none")
+						})
+
+					bottomcircles
+						.append("text")
+							.attrs({
+    							y: function() { return 420 }
+							})
+							.attr("x", function(d, i){ return 140 + i * 85})
+							.style("font-size", "5px")
+							.style("fill", "black")
+							.text(function(d){
+								return d.key;
+							})
+
+			}
 
 
 
@@ -119,12 +263,17 @@
 			    	d.county = d.county;
 				});
 
-				var county = d3.nest()
+		    	//totals of all counties
+				var countyTotal = d3.nest()
 					.key(function(d) {return d["County"];})
 					.rollup(function(d) {
 						return d3.sum(d, function(g) { return 1})
 					}).entries(csv_data)
 
+				createNodes(countyTotal);
+
+				//Sorts by weather First level: weather, second level: list of all counties 
+				//(i.e. Snow[Livingston, Monroe, GENESEE], Rain[Livingston, Monroe, GENESEE])
 				var weather = d3.nest()
 					.key(function(d) {return d["Weather"];})
 					.key(function(d) {return d["County"];})
@@ -132,20 +281,21 @@
 						return d3.sum(d, function(g) {return 1})
 					}).entries(csv_data)
 
-				console.log(weather);
 
-				var relational = d3.nest()
-					.key(function(d) {return d["Vehicle Type Veh1"];})
-					.key(function(d) {return d["Apparent Factor Veh1"];})
+				var accidentCausev1 = d3.nest()
+					.key(function(d){
+						if(d["Apparent Factor Veh1"] != "NOT APPLICABLE" && d["Apparent Factor Veh1"] != "NOT ENTERED" && d["Apparent Factor Veh1"] != "UNKNOWN" && d["Apparent Factor Veh1"]
+							)
+						return (d["Apparent Factor Veh1"])
+					
+					})
 					.rollup(function(d){
 						return d3.sum(d, function(g) {return 1})
 					}).entries(csv_data)
 
-				console.log(relational);
-				createNodes(county);
+				// console.log(accidentCause);
 
-				var age = d3.nest()
-					.key(function(d) {return d["County"]})
+				var agev1 = d3.nest()
 					.key(function(d){
 						var ageGroup = null;
 						if (d["Driver Age Veh1"] <= 20){
@@ -166,37 +316,78 @@
 							ageGroup = '81-90';
 						}
 					return ageGroup;
+					})
+					// .key(function(d){
+					// 	if(d["Apparent Factor Veh1"] != "NOT APPLICABLE" && d["Apparent Factor Veh1"] != "NOT ENTERED" && d["Apparent Factor Veh1"] != "UNKNOWN" && d["Apparent Factor Veh1"])
+					// 	return (d["Apparent Factor Veh1"])
+					// })
+				.rollup(function(d){
+					return d3.sum(d, function(g) {return 1})
+				}).map(csv_data)
 
-				}).entries(csv_data);
 
-				console.log(age);
+				var agev2 = d3.nest()
+					.key(function(d){
+						var ageGroup = null;
+						if (d["Driver Age Veh1"] <= 20){
+							ageGroup = '15-20';
+						} else if (d["Driver Age Veh2"] > 20 && d["Driver Age Veh2"] <= 30 ) {
+							ageGroup = '21-30';
+						} else if (d["Driver Age Veh2"] > 30 && d["Driver Age Veh2"] <= 40 ) {
+							ageGroup = '31-40';
+						} else if (d["Driver Age Veh2"] > 40 && d["Driver Age Veh2"] <= 50 ) {
+							ageGroup = '41-50';
+						} else if (d["Driver Age Veh2"] > 50 && d["Driver Age Veh2"] <= 60 ) {
+							ageGroup = '51-60';
+						} else if (d["Driver Age Veh2"] > 60 && d["Driver Age Veh2"] <= 70 ) {
+							ageGroup = '61-70';
+						} else if (d["Driver Age Veh2"] > 70 && d["Driver Age Veh2"] <= 80 ) {
+							ageGroup = '71-80';
+						} else if (d["Driver Age Veh2"] > 80 && d["Driver Age Veh2"] <= 90 ) {
+							ageGroup = '81-90';
+						}
+					return ageGroup;
+				}).rollup(function(d){
+					return d3.sum(d, function(g) {return 1})
+				})
+				.entries(csv_data);
+
+				var ageorder = [5, 2, 1, 3, 0, 4, 6, 7]
+				var ageorder2 = [5, 6, 1, 0, 4, 3, 7, 8, 2]
+				// agev1 = d3.permute(agev1, ageorder) //age array ordered
+				agev2 = d3.permute(agev2, ageorder2)
+
+				createNodeNetwork(agev1, accidentCausev1);
+
+				// console.log(age);
+
+
 				
-
-
-		    	
-			    var injuries = d3.nest()
-			    	.key(function(d) { return d["Case Year"]; })
-			    	.rollup(function(d) {
-				    	return d3.sum(d, function(g) { return g["Number of Injuries"]; });
-			    	}).entries(csv_data)
+						    	
+			   //  var injuries = d3.nest()
+			   //  	.key(function(d) { return d["Case Year"]; })
+			   //  	.rollup(function(d) {
+				  //   	return d3.sum(d, function(g) { return g["Number of Injuries"]; });
+			   //  	}).entries(csv_data)
 			    	
-			    var serious = d3.nest()
-			    	.key(function(d) { return d["Case Year"]; })
-			    	.rollup(function(d) {
-				    	return d3.sum(d, function(g) { return g["Number of Serious Injuries"]; });
-			    	}).entries(csv_data)
+			   //  var serious = d3.nest()
+			   //  	.key(function(d) { return d["Case Year"]; })
+			   //  	.rollup(function(d) {
+				  //   	return d3.sum(d, function(g) { return g["Number of Serious Injuries"]; });
+			   //  	}).entries(csv_data)
 	
-			    var fatalities = d3.nest()
-			    	.key(function(d) { return d["Case Year"]; })
-			    	.rollup(function(d) {
-				    	return d3.sum(d, function(g) { return g["Number of Fatalities"]; });
-			    	}).entries(csv_data) 
+			   //  var fatalities = d3.nest()
+			   //  	.key(function(d) { return d["Case Year"]; })
+			   //  	.rollup(function(d) {
+				  //   	return d3.sum(d, function(g) { return g["Number of Fatalities"]; });
+			   //  	}).entries(csv_data) 
 
-		    console.log(JSON.stringify(injuries));
-		    console.log(JSON.stringify(serious));
-		    console.log(JSON.stringify(fatalities));
-		    console.log(county);
+		    // console.log(JSON.stringify(injuries));
+		    // console.log(JSON.stringify(serious));
+		    // console.log(JSON.stringify(fatalities));
 		});
+
+
 		    	
 		 //    });
 	    	
