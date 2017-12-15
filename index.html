@@ -22,8 +22,6 @@
 		      <p>From 2006-2015 there were a reported 70,000 car accidents among 9 counties in upstate New York. And while drivers should stay vigilant regardless of where they are, we set to find out whether specific counties/conditions are prone to certain kinds of accidents.</p>
 
  		 </div>
-    
- 		 </div>
     	
     	<div class = "intro">
 		      <p>Breakdown of accident reasons by county</p>
@@ -486,7 +484,7 @@
 				
 				var bubbletree = d3.select("svg"),
 				margin = 40;
-			    diameter = +bubbletree.attr("width",),
+			    diameter = +bubbletree.attr("height",),
 			    g = bubbletree.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
 			
 				var color = d3.scaleLinear()

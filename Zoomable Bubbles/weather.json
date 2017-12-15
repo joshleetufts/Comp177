@@ -1,0 +1,100 @@
+{
+	"name": "Counties",
+	"children": [
+		{
+			"name": "Genesee",
+			"children": [
+					{"name": "Cloudy", "size": 1269},
+					{"name": "Rain", "size": 346},
+					{"name": "Clear", "size": 2117},
+					{"name": "Snow", "size": 501},
+					{"name": "Sleet/Hail/Freezing Rain", "size": 38},
+					{"name": "Other", "size": 36},
+					{"name": "Fog/Smog/Smoke", "size": 10}
+			]
+		},
+		{
+			"name": "Livingston",
+			"children": [
+					{"name": "Cloudy", "size": 1273},
+					{"name": "Rain", "size": 227},
+					{"name": "Clear", "size": 1115},
+					{"name": "Snow", "size": 394},
+					{"name": "Sleet/Hail/Freezing Rain", "size": 36},
+					{"name": "Other", "size": 33},
+					{"name": "Fog/Smog/Smoke", "size": 13}
+			]
+		},
+		{
+			"name": "Ontario",
+			"children": [
+					{"name": "Cloudy", "size": 2087},
+					{"name": "Rain", "size": 575},
+					{"name": "Clear", "size": 2934},
+					{"name": "Snow", "size": 514},
+					{"name": "Sleet/Hail/Freezing Rain", "size": 81},
+					{"name": "Other", "size": 51},
+					{"name": "Fog/Smog/Smoke", "size": 21}
+			]
+		},
+		{
+			"name": "Orleans",
+			"children": [
+					{"name": "Cloudy", "size": 492},
+					{"name": "Rain", "size": 135},
+					{"name": "Clear", "size": 995},
+					{"name": "Snow", "size": 199},
+					{"name": "Sleet/Hail/Freezing Rain", "size": 29},
+					{"name": "Other", "size": 22},
+					{"name": "Fog/Smog/Smoke", "size": 8}
+			]
+		},
+		{
+			"name": "Seneca",
+			"children": [
+					{"name": "Cloudy", "size": 647},
+					{"name": "Rain", "size": 164},
+					{"name": "Clear", "size": 929},
+					{"name": "Snow", "size": 225},
+					{"name": "Sleet/Hail/Freezing Rain", "size": 36},
+					{"name": "Other", "size": 16},
+					{"name": "Fog/Smog/Smoke", "size": 6}
+			]
+		},
+		{
+			"name": "Wayne",
+			"children": [
+					{"name": "Cloudy", "size": 1485},
+					{"name": "Rain", "size": 350},
+					{"name": "Clear", "size": 1789},
+					{"name": "Snow", "size": 466},
+					{"name": "Sleet/Hail/Freezing Rain", "size": 44},
+					{"name": "Other", "size": 49},
+					{"name": "Fog/Smog/Smoke", "size": 19}
+			]
+		}, 
+		{
+			"name": "Wyoming",
+			"children": [
+					{"name": "Cloudy", "size": 668},
+					{"name": "Rain", "size": 168},
+					{"name": "Clear", "size": 930},
+					{"name": "Snow", "size": 301},
+					{"name": "Sleet/Hail/Freezing Rain", "size": 49},
+					{"name": "Other", "size": 18},
+					{"name": "Fog/Smog/Smoke", "size": 16}			]
+		},
+		{
+			"name": "Yates",
+			"children": [
+					{"name": "Cloudy", "size": 342},
+					{"name": "Rain", "size": 75},
+					{"name": "Clear", "size": 501},
+					{"name": "Snow", "size": 111},
+					{"name": "Sleet/Hail/Freezing Rain", "size": 16},
+					{"name": "Other", "size": 15},
+					{"name": "Fog/Smog/Smoke", "size": 8}
+			]
+		}
+	]
+}
