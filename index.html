@@ -16,22 +16,23 @@
   	<body>
     	<div class = "intro">
 		      <h1>Could data visualizations make you a better driver?</h1>
-		      <p>From 2006-2015 there were a reported 70,000 car accidents among 9 counties in upstate New York. And while drivers should stay vigilant regardless of where they are, we set to find out whether specific counties are prone to certain kinds of accidents.</p>
+		      <p>From 2006-2015 there were a reported 70,000 car accidents among 9 counties in upstate New York. And while drivers should stay vigilant regardless of where they are, we set to find out whether specific counties/conditions are prone to certain kinds of accidents.</p>
 
  		 </div>
 
-    	<div id = "bubblegraph">
+    	<div id = "bubblegraph" class = "graph"">
     	</div>
 
-	   	<svg width="960" height="500"></svg>
-
-    	<div id = "treemap">
+    	<div class = "intro">
+		      <h1>Could data visualizations make you a better driver?</h1>
+		      <p>From 2006-2015 there were a reported 70,000 car accidents among 9 counties in upstate New York. And while drivers should stay vigilant regardless of where they are, we set to find out whether specific counties/conditions are prone to certain kinds of accidents.</p>
+		      <div id = "bubblechart" class = "graph">
     	</div>
 
-    	<div id = "relationgraph">
-    	</div>
+ 		 </div>
+    	
 
-    	<div id = "bargraph">
+    	<div id = "bargraph" class = "graph">
     	</div>
     	
     	<script>
@@ -39,21 +40,22 @@
     		var w = 1100;
     		var h = 700;
     	
-    		var canvas = d3.select("#bubblegraph")
+    		var bubbleforce = d3.select("#bubblegraph")
     			.append("svg")
 			      .attr("width", w)
 			      .attr("height", h)
 			      .append("g")	
 
 
-			var relationgraph = d3.select("#relationgraph")
-    			.append("svg")
-			      .attr("width", w)
-			      .attr("height", h)
-			      .append("g")
+			// var relationgraph = d3.select("#relationgraph")
+   //  			.append("svg")
+			//       .attr("width", w)
+			//       .attr("height", h)
+			//       .append("g")
 		    
 		    
-		    var bargraph = d3.select("#bargraph")
+
+			var bubbleChart = d3.select("#bubblechart")
 		    	.append("svg")
 		    	  .attr("width", w)
 			      .attr("height", h)
@@ -67,12 +69,9 @@
 				.force("y",d3.forceY(400).strength(0.01))
 				.force("collide", d3.forceCollide(30))
 
-			function filterCriteria(d){
-				return d.county === "MONROE";
-			}
 
 			function createNodes(datapoints){
-				var circles = canvas.selectAll()
+				var circles = bubbleforce.selectAll()
 					.data(datapoints)
 					.enter()
 						.append("circle")
@@ -106,144 +105,208 @@
 			    .style("opacity", 0);
 			
 			
-			function createNodeNetwork(data1, data2){
-				// console.log(d3.max(age));
-				// var simulation2 = d3.forceSimulation()
-				// 	.force("collide", d3.forceCollide(30))
+			// function createNodeNetwork(data1, data2){
+			// 	console.log(data1.get("51-60"))
 
-				// simulation2.nodes(age)
-				// 	.on('tick', function(){
-				// 		circles
-				// 			.attr("cx", function (d){
-				// 				return d.x
-				// 			})
-				// 			.attr("cy", function(d){
-				// 				return d.y
-				// 			})
-				// 	})
+			// 	var ageScale = d3.scaleSqrt().domain([1, 5773]).range([5, 50])
+			// 	var accidentCauseScale = d3.scaleSqrt().domain([1, 3700]).range([5, 30])
 
+			// 	var topcircles = relationgraph.selectAll()
+			// 		.data(data1.entries())
+			// 		.enter().append("g")
 
-				// var obj = agev1.find(function(obj, query){ return obj.key === "21-30"})
-				// console.log(obj);
-				// console.log(agev2);
-				// console.log(data1);
+			// 		topcircles.append("circle")
+			// 			.attr("r", function(d) {return ageScale(d.value)})
+			// 			.attr("cy", 200)
+			// 			.attr("cx", 0)
+			// 			.attr("fill", "#E17366")
+			// 			.on('click', function(d){
+			// 				console.log(d)
+			// 			})
+			// 			.on("mouseover", function(d, i){
 
-				console.log(data1.get("51-60"))
+			// 				var circle = d3.select(this);
+			// 				circle.transition(200)
+			// 						.attr("fill", "#EA9D93")
 
-				var ageScale = d3.scaleSqrt().domain([1, 5773]).range([5, 50])
-				var accidentCauseScale = d3.scaleSqrt().domain([1, 3700]).range([5, 30])
-
-				var topcircles = relationgraph.selectAll()
-					.data(data1.entries())
-					.enter().append("g")
-
-					topcircles.append("circle")
-						.attr("r", function(d) {return ageScale(d.value)})
-						.attr("cy", 200)
-						.attr("cx", 0)
-						.attr("fill", "#E17366")
-						.on('click', function(d){
-							console.log(d)
-						})
-						.on("mouseover", function(d, i){
-
-							var circle = d3.select(this);
-							circle.transition(200)
-									.attr("fill", "#EA9D93")
-
-							tooltip.style("display", null);
-						})
-						.on("mouseout", function(d, i){
-							var circle = d3.select(this);
-							circle.transition(200)
-									.attr("fill", "#E17366")
-									.attr("stroke", "none")
+			// 				tooltip.style("display", null);
+			// 			})
+			// 			.on("mouseout", function(d, i){
+			// 				var circle = d3.select(this);
+			// 				circle.transition(200)
+			// 						.attr("fill", "#E17366")
+			// 						.attr("stroke", "none")
 							
-							tooltip.style("display", "none")
+			// 				tooltip.style("display", "none")
 
-							d3.select("#t" + d.key).remove()
-						})
-						.on("mousemove", function(d){
-							var xPos = d3.mouse(this[0] - 15)
-							var yPos = d3.mouse(this)[1] - 55;
+			// 				d3.select("#t" + d.key).remove()
+			// 			})
+			// 			.on("mousemove", function(d){
+			// 				var xPos = d3.mouse(this[0] - 15)
+			// 				var yPos = d3.mouse(this)[1] - 55;
 							
-							tooltip.attr("transform", "translate(" + xPos + "," + yPos + ")");
-							tooltip.select("text").text(d.key + " : " + d.value);
-						})
-						.transition()
-							.duration(2000)
-							.attr("cx", function(d, i) {return 200 + i * 100})
+			// 				tooltip.attr("transform", "translate(" + xPos + "," + yPos + ")");
+			// 				tooltip.select("text").text(d.key + " : " + d.value);
+			// 			})
+			// 			.transition()
+			// 				.duration(2000)
+			// 				.attr("cx", function(d, i) {return 200 + i * 100})
 					
 
-						var tooltip = relationgraph.append("g")
-							.attr("class", "tooltip")
-							.style("display", "none");
+			// 			var tooltip = relationgraph.append("g")
+			// 				.attr("class", "tooltip")
+			// 				.style("display", "none");
 
-						tooltip.append("text")
-							.attr("x", 15)
-							.attr("dy", "1.2em")
-							.style("font-size", "1.25em")
-							.attr("font-weight", "bold");
+			// 			tooltip.append("text")
+			// 				.attr("x", 15)
+			// 				.attr("dy", "1.2em")
+			// 				.style("font-size", "1.25em")
+			// 				.attr("font-weight", "bold");
 
-					topcircles.append("text")
-							.attrs({
-    							y: function() { return 205 }
-							})
-							.attr("x", function(d, i){ return 183 + i * 100})
-							.style("font-size", "12px")
-							.style("fill", "white")
-							.text(function(d){
-								return d.key;
-							})
+			// 		topcircles.append("text")
+			// 				.attrs({
+   //  							y: function() { return 205 }
+			// 				})
+			// 				.attr("x", function(d, i){ return 183 + i * 100})
+			// 				.style("font-size", "12px")
+			// 				.style("fill", "white")
+			// 				.text(function(d){
+			// 					return d.key;
+			// 				})
 		
-				var bottomcircles = relationgraph.selectAll()
-					.data(data2.filter(function(d) {return d.key != "null" && d.value > 500;}))
-					.enter().append("g")
+			// 	var bottomcircles = relationgraph.selectAll()
+			// 		.data(data2.filter(function(d) {return d.key != "null" && d.value > 500;}))
+			// 		.enter().append("g")
 
-					bottomcircles
-						.append("circle")
-						.attr("r", function(d) {return accidentCauseScale(d.value)})
-						.attr("cy", 400)
-						.attr("cx", function(d, i) {return 150 + i * 80})
-						.attr("fill", "#B45177")
-						.on('click', function(d){
-							console.log(d)
-						})
-						.on("mouseover", function(d, i){
-							console.log(d.value);
-							var circle = d3.select(this);
-							circle.transition(200)
-									.attr("fill", "#CA859F")
-						})
-						.on("mouseout", function(d, i){
-							var circle = d3.select(this);
-							circle.transition(200)
-									.attr("fill", "#B45177")
-									.attr("stroke", "none")
-						})
+			// 		bottomcircles
+			// 			.append("circle")
+			// 			.attr("r", function(d) {return accidentCauseScale(d.value)})
+			// 			.attr("cy", 400)
+			// 			.attr("cx", function(d, i) {return 150 + i * 80})
+			// 			.attr("fill", "#B45177")
+			// 			.on('click', function(d){
+			// 				console.log(d)
+			// 			})
+			// 			.on("mouseover", function(d, i){
+			// 				console.log(d.value);
+			// 				var circle = d3.select(this);
+			// 				circle.transition(200)
+			// 						.attr("fill", "#CA859F")
+			// 			})
+			// 			.on("mouseout", function(d, i){
+			// 				var circle = d3.select(this);
+			// 				circle.transition(200)
+			// 						.attr("fill", "#B45177")
+			// 						.attr("stroke", "none")
+			// 			})
 
-					bottomcircles
-						.append("text")
-							.attrs({
-    							y: function() { return 420 }
-							})
-							.attr("x", function(d, i){ return 140 + i * 85})
-							.style("font-size", "5px")
-							.style("fill", "black")
-							.text(function(d){
-								return d.key;
-							})
+			// 		bottomcircles
+			// 			.append("text")
+			// 				.attrs({
+   //  							y: function() { return 420 }
+			// 				})
+			// 				.attr("x", function(d, i){ return 140 + i * 85})
+			// 				.style("font-size", "5px")
+			// 				.style("fill", "black")
+			// 				.text(function(d){
+			// 					return d.key;
+			// 				})
 
-			}
+			// }
 			
+			function createBubbleChart(){
+				var format = d3.format(",d");
+
+				var color = d3.scaleOrdinal(d3.schemeCategory20c);
+
+				var pack = d3.pack()
+				    .size([w, h])
+				    .padding(1.5);
+
+				d3.csv("bubble.csv", function(d) {
+				  d.value = +d.value;
+				  if (d.value) return d;
+				}, function(error, classes) {
+				  if (error) throw error;
+
+				  var root = d3.hierarchy({children: classes})
+				      .sum(function(d) { return d.value; })
+				      .each(function(d) {
+				        if (id = d.data.id) {
+				          var id, i = id.lastIndexOf(".");
+				          d.id = id;
+				          d.package = id.slice(0, i);
+				          d.class = id.slice(i + 1);
+				        }
+				      });
+
+				  var node = bubbleChart.selectAll(".node")
+				    .data(pack(root).leaves())
+				    .enter().append("g")
+				      .attr("class", "node")
+				      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+				  node.append("circle")
+				      .attr("id", function(d) { return d.id; })
+				      .attr("r", function(d) { return d.r; })
+				      .style("fill", function(d) { return color(d.package); });
+				      
+
+				  node.append("clipPath")
+				      .attr("id", function(d) { return "clip-" + d.id; })
+				    .append("use")
+				      .attr("xlink:href", function(d) { return "#" + d.id; });
+
+				  node.append("text")
+				      .attr("clip-path", function(d) { return "url(#clip-" + d.id + ")"; })
+				    .selectAll("tspan")
+				    .data(function(d) { return d.class.split(/(?=[A-Z][^A-Z])/g); })
+				    .enter().append("tspan")
+				      .attr("x", 0)
+				      .attr("y", function(d, i, nodes) { return 13 + (i - nodes.length / 2 - 0.5) * 10; })
+				      .text(function(d) { return d; });
+
+				  node.append("title")
+				      .text(function(d) { return d.id + "\n" + format(d.value); });
+				});
+
+				var legend = g.append("g")
+				      .attr("font-family", "sans-serif")
+				      .attr("font-size", 10)
+				      .attr("text-anchor", "end")
+				    .selectAll("g")
+				    .data(pack(root).leaves())
+				    .enter().append("g")
+				      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+				
+				  legend.append("rect")
+				      .attr("x", width - 19)
+				      .attr("width", 19)
+				      .attr("height", 19)
+				      .attr("fill", z);
+				
+				  legend.append("text")
+				      .attr("x", width - 24)
+				      .attr("y", 9.5)
+				      .attr("dy", "0.32em")
+				      .text(function(d) { return d; });
+			}
+
+			
+
 			function createBarGraph() {
 				
-				
-				var svg = d3.select("svg"),
+				var bargraph = d3.select("#bargraph")
+	    			.append("svg")
+				      .attr("width", w)
+				      .attr("height", h)
+
+				bargraph,
 			    margin = {top: 50, right: 30, bottom: 30, left: 40},
-			    width = +svg.attr("width") - margin.left - margin.right,
-			    height = +svg.attr("height") - margin.top - margin.bottom,
-			    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+			    width = +bargraph.attr("width") - margin.left - margin.right,
+			    height = +bargraph.attr("height") - margin.top - margin.bottom,
+			    g = bargraph.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
 				
 				var x = d3.scaleBand()
 				    .rangeRound([0, width])
@@ -327,11 +390,16 @@
 			
 			function createCountyBarGraph() {
 			
-				var svg = d3.select("svg"),
+				var bargraph = d3.select("#bargraph")
+	    			.append("svg")
+				      .attr("width", w)
+				      .attr("height", h)
+
+				bargraph,
 			    margin = {top: 50, right: 30, bottom: 30, left: 40},
-			    width = +svg.attr("width") - margin.left - margin.right,
-			    height = +svg.attr("height") - margin.top - margin.bottom,
-			    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+			    width = +bargraph.attr("width") - margin.left - margin.right,
+			    height = +bargraph.attr("height") - margin.top - margin.bottom,
+			    g = bargraph.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 				
 				var x = d3.scaleBand()
 				    .rangeRound([0, width])
@@ -444,7 +512,6 @@
 					}).entries(csv_data)
 					
 
-
 				var accidentCausev1 = d3.nest()
 					.key(function(d){
 						if(d["Apparent Factor Veh1"] != "NOT APPLICABLE" && d["Apparent Factor Veh1"] != "NOT ENTERED" && d["Apparent Factor Veh1"] != "UNKNOWN" && d["Apparent Factor Veh1"]
@@ -520,11 +587,9 @@
 				// agev1 = d3.permute(agev1, ageorder) //age array ordered
 				agev2 = d3.permute(agev2, ageorder2)
 
-				createNodeNetwork(agev1, accidentCausev1);
+				// createNodeNetwork(agev1, accidentCausev1);
 
 				// console.log(age);
-
-
 				
 						    	
 			    var injuries = d3.nest()
@@ -544,7 +609,6 @@
 			     	.rollup(function(d) {
 				     	return d3.sum(d, function(g) { return g["Number of Fatalities"]; });
 			     	}).map(csv_data) 
-				createBarGraph();
 				
 				var injuries = d3.nest()
 			    	.key(function(d) { return d["County"]; })
@@ -568,6 +632,7 @@
 			     console.log(JSON.stringify(serious));
 			     console.log(JSON.stringify(fatalities));
 			     createCountyBarGraph();
+			     createBubbleChart();
 			     
 			     
 		});
